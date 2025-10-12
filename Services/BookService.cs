@@ -1,4 +1,5 @@
-﻿using Book_Rental.DTOs;
+﻿using Book_Rental.DTOs.Requests;
+using Book_Rental.DTOs.Responses;
 using Book_Rental.Entities;
 using Book_Rental.Interfaces;
 
@@ -9,8 +10,10 @@ namespace Book_Rental.Services
         private readonly IBookRepository _repo;
         public BookService(IBookRepository repo) => _repo = repo;
 
-        public async Task<IEnumerable<BookDto>> GetAllAsync() =>
-            (await _repo.GetAllAsync()).Select(b => new BookDto
+        public async Task<IEnumerable<BookResponseDto>> GetAllAsync()
+        {
+            var books = await _repo.GetAllAsync();
+            return books.Select(b => new BookResponseDto
             {
                 Id = b.Id,
                 Title = b.Title,
@@ -18,27 +21,43 @@ namespace Book_Rental.Services
                 Stock = b.Stock,
                 UserId = b.UserId
             });
-
-        public async Task<BookDto?> GetByIdAsync(Guid id)
-        {
-            var b = await _repo.GetByIdAsync(id);
-            return b == null ? null : new BookDto { Id = b.Id, Title = b.Title, Author = b.Author, Stock = b.Stock, UserId = b.UserId };
         }
 
-        public async Task AddAsync(BookDto book)
+        public async Task<BookResponseDto?> GetByIdAsync(Guid id)
         {
-            var b = new Book { Title = book.Title, Author = book.Author, Stock = book.Stock };
+            var b = await _repo.GetByIdAsync(id);
+            if (b == null) return null;
+
+            return new BookResponseDto
+            {
+                Id = b.Id,
+                Title = b.Title,
+                Author = b.Author,
+                Stock = b.Stock,
+                UserId = b.UserId
+            };
+        }
+
+        public async Task AddAsync(BookRequestDto book)
+        {
+            var b = new Book
+            {
+                Title = book.Title,
+                Author = book.Author,
+                Stock = book.Stock
+            };
             await _repo.AddAsync(b);
         }
 
-        public async Task UpdateAsync(BookDto book)
+        public async Task UpdateAsync(Guid id, BookRequestDto book)
         {
-            var existing = await _repo.GetByIdAsync(book.Id);
-            if (existing == null) return;
+            var existing = await _repo.GetByIdAsync(id);
+            if (existing == null) throw new Exception("Book not found.");
 
             existing.Title = book.Title;
             existing.Author = book.Author;
             existing.Stock = book.Stock;
+
             await _repo.UpdateAsync(existing);
         }
 
@@ -46,22 +65,24 @@ namespace Book_Rental.Services
 
         public async Task RentBookAsync(Guid bookId, Guid userId)
         {
-            var b = await _repo.GetByIdAsync(bookId);
-            if (b == null || b.Stock <= 0) throw new Exception("Book not available.");
+            var book = await _repo.GetByIdAsync(bookId);
+            if (book == null || book.Stock <= 0)
+                throw new Exception("Book not available.");
 
-            b.Stock--;
-            b.UserId = userId;
-            await _repo.UpdateAsync(b);
+            book.Stock--;
+            book.UserId = userId;
+            await _repo.UpdateAsync(book);
         }
 
         public async Task ReturnBookAsync(Guid bookId)
         {
-            var b = await _repo.GetByIdAsync(bookId);
-            if (b == null) throw new Exception("Book not found.");
+            var book = await _repo.GetByIdAsync(bookId);
+            if (book == null)
+                throw new Exception("Book not found.");
 
-            b.Stock++;
-            b.UserId = null;
-            await _repo.UpdateAsync(b);
+            book.Stock++;
+            book.UserId = null;
+            await _repo.UpdateAsync(book);
         }
     }
 }

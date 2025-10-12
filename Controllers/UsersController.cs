@@ -1,6 +1,5 @@
-﻿using Book_Rental.DTOs;
+﻿using Book_Rental.DTOs.Requests;
 using Book_Rental.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Book_Rental.Controllers
@@ -12,9 +11,8 @@ namespace Book_Rental.Controllers
         private readonly IUserService _service;
         public UsersController(IUserService service) => _service = service;
 
-        // Register new user
         [HttpPost("register")]
-        public async Task<IActionResult> Register(UserDto user)
+        public async Task<IActionResult> Register(UserRequestDto user)
         {
             try
             {
@@ -27,26 +25,22 @@ namespace Book_Rental.Controllers
             }
         }
 
-        // Get all users
         [HttpGet]
-        public async Task<IActionResult> GetAll() =>
-            Ok(await _service.GetAllAsync());
+        public async Task<IActionResult> GetAll() => Ok(await _service.GetAllAsync());
 
-        // Get by ID
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var result = await _service.GetByIdAsync(id);
-            return result == null ? NotFound() : Ok(result);
+            var user = await _service.GetByIdAsync(id);
+            return user == null ? NotFound() : Ok(user);
         }
 
-        // Update user
-        [HttpPut]
-        public async Task<IActionResult> Update(UserDto user)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(Guid id, UserRequestDto user)
         {
             try
             {
-                await _service.UpdateUserAsync(user);
+                await _service.UpdateUserAsync(id, user);
                 return Ok("User updated successfully.");
             }
             catch (Exception ex)
@@ -55,7 +49,6 @@ namespace Book_Rental.Controllers
             }
         }
 
-        // Delete user
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {

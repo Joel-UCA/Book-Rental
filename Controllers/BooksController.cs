@@ -1,6 +1,5 @@
-﻿using Book_Rental.DTOs;
+﻿using Book_Rental.DTOs.Requests;
 using Book_Rental.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Book_Rental.Controllers
@@ -16,16 +15,16 @@ namespace Book_Rental.Controllers
         [HttpGet("{id}")] public async Task<IActionResult> Get(Guid id) => Ok(await _service.GetByIdAsync(id));
 
         [HttpPost]
-        public async Task<IActionResult> Add(BookDto book)
+        public async Task<IActionResult> Add(BookRequestDto bookResponse)
         {
-            await _service.AddAsync(book);
+            await _service.AddAsync(bookResponse);
             return Ok("Book added successfully.");
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(BookDto book)
+        public async Task<IActionResult> Update(Guid id, BookRequestDto book)
         {
-            await _service.UpdateAsync(book);
+            await _service.UpdateAsync(id, book);
             return Ok("Book updated.");
         }
 

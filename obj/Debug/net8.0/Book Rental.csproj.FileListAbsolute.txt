@@ -165,3 +165,4 @@ C:\Users\User\OneDrive\Desktop\Book Rental\Book Rental\obj\Debug\net8.0\refint\B
 C:\Users\User\OneDrive\Desktop\Book Rental\Book Rental\obj\Debug\net8.0\Book Rental.pdb
 C:\Users\User\OneDrive\Desktop\Book Rental\Book Rental\obj\Debug\net8.0\Book Rental.genruntimeconfig.cache
 C:\Users\User\OneDrive\Desktop\Book Rental\Book Rental\obj\Debug\net8.0\ref\Book Rental.dll
+C:\Users\User\OneDrive\Desktop\Book Rental\Book Rental\obj\Debug\net8.0\Book Rental.sourcelink.json

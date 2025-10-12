@@ -24,17 +24,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/BookDto"
+                "$ref": "#/components/schemas/BookRequestDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/BookDto"
+                "$ref": "#/components/schemas/BookRequestDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/BookDto"
+                "$ref": "#/components/schemas/BookRequestDto"
               }
             }
           }
@@ -49,21 +49,31 @@
         "tags": [
           "Books"
         ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/BookDto"
+                "$ref": "#/components/schemas/BookRequestDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/BookDto"
+                "$ref": "#/components/schemas/BookRequestDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/BookDto"
+                "$ref": "#/components/schemas/BookRequestDto"
               }
             }
           }
@@ -183,17 +193,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UserDto"
+                "$ref": "#/components/schemas/UserRequestDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/UserDto"
+                "$ref": "#/components/schemas/UserRequestDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/UserDto"
+                "$ref": "#/components/schemas/UserRequestDto"
               }
             }
           }
@@ -210,35 +220,6 @@
         "tags": [
           "Users"
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Users"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserDto"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "OK"
@@ -262,6 +243,46 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRequestDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRequestDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRequestDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -293,13 +314,9 @@
   },
   "components": {
     "schemas": {
-      "BookDto": {
+      "BookRequestDto": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
           "title": {
             "type": "string",
             "nullable": true
@@ -311,22 +328,13 @@
           "stock": {
             "type": "integer",
             "format": "int32"
-          },
-          "userId": {
-            "type": "string",
-            "format": "uuid",
-            "nullable": true
           }
         },
         "additionalProperties": false
       },
-      "UserDto": {
+      "UserRequestDto": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
           "fullName": {
             "type": "string",
             "nullable": true

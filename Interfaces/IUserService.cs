@@ -1,13 +1,14 @@
-﻿using Book_Rental.DTOs;
+﻿using Book_Rental.DTOs.Requests;
+using Book_Rental.DTOs.Responses;
 
 namespace Book_Rental.Interfaces
 {
     public interface IUserService
     {
-        Task<IEnumerable<UserDto>> GetAllAsync();
-        Task<UserDto?> GetByIdAsync(Guid id);
-        Task RegisterUserAsync(UserDto user);
-        Task UpdateUserAsync(UserDto user);
+        Task<IEnumerable<UserResponseDto>> GetAllAsync();
+        Task<UserResponseDto?> GetByIdAsync(Guid id);
+        Task RegisterUserAsync(UserRequestDto user);
+        Task UpdateUserAsync(Guid id, UserRequestDto user);
         Task DeleteUserAsync(Guid id);
     }
 }
